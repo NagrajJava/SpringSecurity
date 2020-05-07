@@ -14,8 +14,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
  
- @Configuratgit bhubion
+ @Configuration
  @EnableWebSecurity
 public class PagesConfig extends WebSecurityConfigurerAdapter
 {
@@ -48,12 +49,18 @@ public class PagesConfig extends WebSecurityConfigurerAdapter
 		http
 		.authorizeRequests()
 		.antMatchers("/index.html").permitAll()
-		.antMatchers("/profile/index").hasAnyRole("User","Admin","Manager")
-		.antMatchers("/admin/index").hasAnyRole("Admin","Manager")
-		.antMatchers("/management/index").hasRole("Manager")
+		.antMatchers("/profile/**").authenticated()
+		.antMatchers("/admin/**").hasAnyRole("Admin","Manager")
+		.antMatchers("/management/**").hasAnyRole("Manager","Admin","User")
 		.antMatchers("/public/api/test1").hasAuthority("Access-user")
 		.and()
-		.httpBasic();
+		.formLogin()
+		.loginPage("/login").permitAll()
+		.and()
+		 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout")).logoutSuccessUrl("/login")
+		 .and()
+		 .rememberMe().tokenValiditySeconds(2923000).key("mysecret");
+		
 	}
 	
 	/*
