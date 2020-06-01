@@ -19,11 +19,11 @@ public class AddressController {
 	AddressRepo addressRepo;
 	
 	@GetMapping("GetAddress/{firstname}")
-	public List<CustomerAddress> getCustomerAddress(@PathVariable("firstname") String firstname)
+	public CustomerAddress  getCustomerAddress(@PathVariable("firstname") String firstname)
 	{
 		//addressRepo.findByZipcode(zipCode);
 		
-		List<CustomerAddress> CustomerAddres =  addressRepo.findByFirstName(firstname);
+		CustomerAddress CustomerAddres =  addressRepo.findByFirstName(firstname);
 		return CustomerAddres;
 			
 	}
